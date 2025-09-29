@@ -4,18 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=>, initial-scale=1.0">
     <title>Document</title>
+    <style> 
+        p {
+            color:green; /* Text color */
+            font-size: 35px; /* Font size */
+            text-align: left;
+        }
+        body {
+            background-color: rosybrown; /* Background color */
+        }
+        div {
+            border: 2px solid black; /* Border */
+            margin-right: 150px; /* Margin */
+            margin-left: 75px;
+            background-color: indigo; /* Background color */
+            color: white; /* Text color */
+            padding: 20px; /* Padding */
+        }
+    </style>
 </head>
 <body>
-    <h2>Registration Form</h2>
-    <form action="http://localhost:3000/submit_registration" method="post">
+    <p>Registration Form</p>
+        <form action="http://localhost:3000/submit_registration" method="post">
         <label for="fname">First name:</label><br>
         <input type="text" id="fname" name="fname" required><br><br>
         <label for="lname">Last name:</label><br>
         <input type="text" id="lname" name="lname" required><br><br>
         <label for="address">Address:</label><br>
         <input type="text" id="address" name="address" required><br><br>
-
-        <input type="submit" value="Submit">
+        <label for="Country">Country:</label><br>
+        <select id="country" name="country" required>
+            <option value="luxembourg">Luxembourg</option>
+            <option value="belgium">Belgium</option>
+            <option value="uk">UK</option>
+            <option value="germany">Germany</option>
+            <option value="other">Other</option>
+        </select><br><br>
+        
+      <div> <input type="submit" value="Submit"> </div>
     </form>
 </body>
 </html>
