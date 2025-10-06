@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Bookmanagement by Igor </title>
+</head>
+<body>
+<h1> List of Books </h1>
+<table id="books-table" border="1">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th>Genre</th>
+    </tr>
+    </thead>
+    <tbody>
+        <!-- Book entries here -->
+    </tbody>
+    </table>
+    <hr>
+    <h2>Update Book details</h2>
+
+<style>
+        label {
+  display: inline-block;
+  width: 100px;
+}
+input {
+  width: 200px;
+}
+</style>
+
+
+    <label>Title: <input type="text" id="upd-title"></label><br>
+    <label>Author: <input type="text" id="upd-author"></label><br>
+    <label>Year: <input type="number" id="upd-year"></label><br>
+    <label>Genre: <input type="text" id="upd-genre"></label><br>
+    <button id="update-btn">Update Book</button>
+    <div id="update-error" style="color:red;"></div>
+
+    <hr>
+    <h2>Remove Book</h2>
+    <label>Title: <input type="text" id="rmv-title"></label><br>
+    <button id="remove-btn">Remove Book</button>
+    <div id="remove-error" style="color:red;"></div>
+<script src="app.js"></script>
+
+</body>
+</html>

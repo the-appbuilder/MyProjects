@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue Book Manager</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body {font-family:Arial,Helvetica,sans-serif; margin:2rem;}
+    h1 {margin-bottom:.5rem;}
+    table {border-collapse:collapse; width:100%; margin-top:1rem;}
+    th, td {border:1px solid #bbb; padding:.5rem; text-align:left;}
+    th {background:#f0f0f0;}
+    .form-section {margin-top:2rem; max-width:420px;}
+    .form-section input, .form-section select {width:100%; padding:.4rem; margin-bottom:.6rem;}
+    .form-section button {padding:.5rem 1rem;}
+    .error {color:#c00; margin-top:.4rem;}
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h1>📚 Vue Book Manager</h1>
+
+  <!-- ------------------- Table ------------------- -->
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th><th>Author</th><th>Year</th><th>Genre</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(b,i) in books" :key="i">
+        <td>{{ b.title }}</td>
+        <td>{{ b.author }}</td>
+        <td>{{ b.year }}</td>
+        <td>{{ b.genre }}</td>
+        <td>
+          <button @click="remove(i)" title="Delete">✖</button>
+        </td>
+      </tr>
+      <tr v-if="books.length===0">
+        <td colspan="5" style="text-align:center; font-style:italic;">
+          No books in the list.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ------------------- Add ------------------- -->
+  <div class="form-section">
+    <h2>Add New Book</h2>
+    <input v-model="newBook.title"   placeholder="Title">
+    <input v-model="newBook.author"  placeholder="Author">
+    <input v-model.number="newBook.year" placeholder="Year (numeric)">
+    <input v-model="newBook.genre"   placeholder="Genre">
+    <button @click="addBook">Add Book</button>
+    <div class="error">{{ addError }}</div>
+  </div>
+
+  <!-- ------------------- Edit ------------------- -->
+  <div class="form-section">
+    <h2>Edit Book (by exact title)</h2>
+    <input v-model="edit.searchTitle" placeholder="Existing title">
+    <input v-model="edit.author"      placeholder="New author (optional)">
+    <input v-model.number="edit.year" placeholder="New year (optional)">
+    <input v-model="edit.genre"       placeholder="New genre (optional)">
+    <button @click="editBook">Save Changes</button>
+    <div class="error">{{ editError }}</div>
+  </div>
+
+  <!-- ------------------- Delete ------------------- -->
+  <div class="form-section">
+    <h2>Delete Book (by exact title)</h2>
+    <input v-model="removeTitle" placeholder="Title to delete">
+    <button @click="removeByTitle">Delete</button>
+    <div class="error">{{ removeError }}</div>
+  </div>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      // ----- 1️⃣ initial JSON data (reactive) -----
+      books: [
+        { title: "The Hobbit",          author: "J.R.R. Tolkien", year: 1937, genre: "Fantasy"   },
+        { title: "1984",               author: "George Orwell",  year: 1949, genre: "Dystopian" },
+        { title: "Pride and Prejudice",author: "Jane Austen",    year: 1813, genre: "Romance"   }
+      ],
+
+      // ----- form models -----
+      newBook:   { title: "", author: "", year: null, genre: "" },
+      edit:      { searchTitle: "", author: "", year: null, genre: "" },
+      removeTitle: "",
+
+      // ----- error messages -----
+      addError:   "",
+      editError:  "",
+      removeError:""
+    };
+  },
+
+  methods: {
+    // ----- 2️⃣ validation helpers -----
+    notEmpty(v) { return v && v.toString().trim().length > 0; },
+    validYear(v){ return Number.isInteger(v) && v > 0; },
+
+    // ----- 3️⃣ Add a new book -----
+    addBook() {
+      this.addError = "";
+      const {title,author,year,genre}=this.newBook;
+
+      if (!this.notEmpty(title)||!this.notEmpty(author)||!this.notEmpty(genre)||!this.validYear(year)){
+        this.addError = "All fields are required and year must be a positive integer.";
+        return;
+      }
+      if (this.books.some(b=>b.title===title)){
+        this.addError = "A book with that title already exists.";
+        return;
+      }
+      this.books.push({title,author,year,genre});
+      // reset form
+      this.newBook={title:"",author:"",year:null,genre:""};
+    },
+
+    // ----- 4️⃣ Edit an existing book -----
+    editBook() {
+      this.editError = "";
+      const {searchTitle,author,year,genre}=this.edit;
+      if (!this.notEmpty(searchTitle)){
+        this.editError = "Enter the exact title of the book you want to edit.";
+        return;
+      }
+      const idx=this.books.findIndex(b=>b.title===searchTitle);
+      if (idx===-1){
+        this.editError = `No book found with title “${searchTitle}”.`;
+        return;
+      }
+      // optional updates – only overwrite if a new value is supplied
+      if (this.notEmpty(author)) this.books[idx].author = author;
+      if (this.validYear(year))   this.books[idx].year   = year;
+      if (this.notEmpty(genre))  this.books[idx].genre  = genre;
+
+      // clear edit form
+      this.edit={searchTitle:"",author:"",year:null,genre:""};
+    },
+
+    // ----- 5️⃣ Remove by index (quick delete button) -----
+    remove(index){
+      this.books.splice(index,1);
+    },
+
+    // ----- 6️⃣ Remove by title (separate form) -----
+    removeByTitle(){
+      this.removeError="";
+      const title=this.removeTitle.trim();
+      if (!this.notEmpty(title)){
+        this.removeError="Enter a title to delete.";
+        return;
+      }
+      const before=this.books.length;
+      this.books=this.books.filter(b=>b.title!==title);
+      if (this.books.length===before){
+        this.removeError=`No book found with title “${title}”.`;
+        return;
+      }
+      this.removeTitle="";
+    }
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

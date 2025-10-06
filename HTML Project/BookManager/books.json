@@ -1,0 +1,38 @@
+[
+  {
+    "title": "The Mysterious Island",
+    "author": "Jules Verne",
+    "year": 1874,
+    "genre": "Science Fiction"
+  },
+  {
+    "title": "The Passions of the Souls",
+    "author": "René Descartes",
+    "year": 1649,
+    "genre": "Philosophy"
+  },
+  {
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "year": 1960,
+    "genre": "Fiction"
+  },
+  {
+    "title": "Os Lusidias",
+    "author": "Luís de Camões",
+    "year": 1572,
+    "genre": "Epic Poetry"
+  },
+  {
+    "title": "A minha vida de menina",
+    "author": "Helena Morley",
+    "year": 1942,
+    "genre": "Autobiography"
+  },
+  {
+    "title": "1test",
+    "author": "Paneleiro",
+    "year": "1996",
+    "genre": "Fiction"
+  }
+]
